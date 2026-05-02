@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/share/google-cloud-sdk/bin:$PATH
 echo "Deploying Indian Election Assistant to Google Cloud Run..."
 gcloud run deploy election-assistant \
   --source . \
