@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Election Assistant</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="logo">
+        <i class="fa-solid fa-check-to-slot"></i>
+        <span>VoterBuddy India</span>
+      </div>
+      <ul class="nav-links">
+        <li><button class="nav-btn active" data-target="learn-view"><i class="fa-solid fa-book-open"></i> Guide</button></li>
+        <li><button class="nav-btn" data-target="flashcard-view"><i class="fa-solid fa-clone"></i> Flashcards</button></li>
+        <li><button class="nav-btn" data-target="quiz-view"><i class="fa-solid fa-clipboard-question"></i> Quiz</button></li>
+        <li><button class="nav-btn" data-target="chat-view"><i class="fa-solid fa-comments"></i> Assistant</button></li>
+      </ul>
+      <div class="motto">
+        <p>Every Vote Counts.</p>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="top-header">
+        <h1>Indian Election System</h1>
+        <p>Your interactive guide to the world's largest democracy.</p>
+      </header>
+
+      <div class="view-container">
+        
+        <!-- Learn View (Process) -->
+        <section id="learn-view" class="view active">
+          <div class="card-container">
+            <h2>The Voting Process</h2>
+            <div class="process-timeline" id="process-container">
+              <!-- Process steps injected here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Flashcards View -->
+        <section id="flashcard-view" class="view">
+          <div class="card-container">
+            <h2>Election Terminology</h2>
+            <p class="subtitle">Click the card to reveal the definition.</p>
+            
+            <div class="flashcard-deck">
+              <div class="flashcard" id="current-flashcard">
+                <div class="flashcard-inner">
+                  <div class="flashcard-front">
+                    <h3 id="fc-term">Term</h3>
+                    <p class="fc-hint">Click to flip <i class="fa-solid fa-rotate"></i></p>
+                  </div>
+                  <div class="flashcard-back">
+                    <p id="fc-def">Definition</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flashcard-controls">
+                <button id="fc-prev"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                <span id="fc-counter">1 / X</span>
+                <button id="fc-next">Next <i class="fa-solid fa-arrow-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quiz View -->
+        <section id="quiz-view" class="view">
+          <div class="card-container">
+            <h2>Test Your Knowledge</h2>
+            
+            <div id="quiz-intro" class="quiz-state active">
+              <p>Ready to see how much you know about the Indian Election System?</p>
+              <button id="start-quiz-btn" class="primary-btn">Start Quiz</button>
+            </div>
+
+            <div id="quiz-active" class="quiz-state">
+              <div class="quiz-header">
+                <span id="quiz-progress-text">Question 1 of 5</span>
+                <div class="progress-bar-container">
+                  <div id="quiz-progress-fill" class="progress-bar-fill"></div>
+                </div>
+              </div>
+              
+              <h3 id="quiz-question-text" class="question-text">Question goes here</h3>
+              
+              <div id="quiz-options" class="options-container">
+                <!-- Options injected here -->
+              </div>
+
+              <div id="quiz-feedback" class="feedback-box hidden">
+                <p id="feedback-text"></p>
+                <p id="explanation-text"></p>
+                <button id="next-q-btn" class="secondary-btn">Next Question</button>
+              </div>
+            </div>
+
+            <div id="quiz-results" class="quiz-state">
+              <div class="results-content">
+                <h3>Quiz Complete!</h3>
+                <div class="score-circle">
+                  <span id="final-score">0</span>
+                  <span class="score-divider">/</span>
+                  <span id="total-questions">0</span>
+                </div>
+                <p id="score-message">Great job!</p>
+                <button id="restart-quiz-btn" class="primary-btn"><i class="fa-solid fa-rotate-right"></i> Try Again</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Chat View -->
+        <section id="chat-view" class="view">
+          <div class="card-container chat-container-wrapper">
+            <h2>Election Assistant Chat</h2>
+            
+            <div class="chat-window">
+              <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                  <div class="message-bubble">
+                    Namaste! 🙏 I'm your Election Assistant. Ask me anything about registering to vote, finding your polling booth, or how the EVM works!
+                  </div>
+                </div>
+              </div>
+              
+              <div class="chat-suggestions">
+                <button class="suggestion-chip">How do I register?</button>
+                <button class="suggestion-chip">What is EVM?</button>
+                <button class="suggestion-chip">Am I eligible?</button>
+                <button class="suggestion-chip">Find polling booth</button>
+              </div>
+
+              <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type your question here..." autocomplete="off">
+                <button id="chat-send-btn" class="primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
