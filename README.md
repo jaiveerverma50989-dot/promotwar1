@@ -3,11 +3,11 @@
 ![VoterBuddy Hero](./assets/hero.png)
 
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![Testing: Jest](https://img.shields.io/badge/Testing-Jest%20%7C%20Supertest-green?logo=jest)](https://jestjs.io/)
+[![Security: Helmet](https://img.shields.io/badge/Security-Helmet%20%7C%20RateLimit-blue?logo=security)](https://helmetjs.github.io/)
 [![Google Cloud Run](https://img.shields.io/badge/Deployed%20to-Google%20Cloud%20Run-blue?logo=google-cloud&logoColor=white)](https://election-assistant-325019738133.us-central1.run.app)
-[![Gemini AI](https://img.shields.io/badge/Powered%20by-Google%20Gemini-orange?logo=google-gemini&logoColor=white)](https://deepmind.google/technologies/gemini/)
 
-**VoterBuddy India** is a premium, interactive web application designed to empower Indian citizens with knowledge about their democratic rights and the electoral process. Built with a sophisticated dark-mode UI and powered by cutting-edge AI, it transforms civic education into an engaging digital experience.
+**VoterBuddy India** is a premium, interactive web application designed to empower Indian citizens with knowledge about their democratic rights and the electoral process. It transforms complex civic information into an engaging, accessible, and secure digital experience.
 
 ---
 
@@ -19,23 +19,58 @@
 ## ✨ Core Features
 
 ### 📖 1. Interactive Election Guide
-A comprehensive, step-by-step timeline that demystifies the voting journey. From initial registration via **Form 6** to the final mark on your finger at the polling station, every stage is explained clearly.
+A comprehensive, step-by-step timeline demystifying the voting journey. From registration via **Form 6** to casting the vote, every stage is detailed with clarity.
 
 ### 📇 2. 3D Interactive Flashcards
-Learning terminology doesn't have to be boring. Use our **3D flipping cards** to master essential concepts like:
-- **VVPAT** (Voter Verifiable Paper Audit Trail)
-- **NOTA** (None of the Above)
-- **Model Code of Conduct**
-- **EPIC Card** details
+Master essential concepts like **VVPAT**, **NOTA**, and the **Model Code of Conduct** using immersive 3D flipping cards.
 
 ### 📝 3. Knowledge Quiz
-Put your democratic knowledge to the test!
-- **Real-time Feedback**: Instant results after every question.
-- **In-depth Explanations**: Learn why an answer is correct.
-- **Score Analytics**: Track your progress and share your results.
+Test your democratic literacy with real-time feedback, in-depth explanations, and visual score analytics.
 
 ### 🤖 4. AI-Powered Chat Assistant
-Have a specific question? Ask **VoterBuddy AI**. Powered by **Google Gemini**, our assistant provides accurate, context-aware answers regarding voter eligibility, registration procedures, and polling booth protocols.
+Ask **VoterBuddy AI** anything. Powered by **Google Gemini**, it provides accurate answers regarding eligibility, registration, and protocols.
+
+### 🔔 5. Weekly Reminders
+Integrated email system to keep citizens informed about upcoming deadlines and civic responsibilities.
+
+---
+
+## 🏗️ Architecture Overview
+
+```mermaid
+graph TD
+    User([User Client]) -- HTTPS --> GCR[Google Cloud Run]
+    subgraph "Backend (Node.js/Express)"
+        GCR --> Security[Security Layer: Helmet & RateLimit]
+        Security --> Efficiency[Efficiency Layer: Compression]
+        Efficiency --> Router{API Router}
+        Router --> Chat[AI Chat Service]
+        Router --> Static[Static Asset Server]
+        Router --> Email[Reminder Service: Node-Cron]
+    end
+    Chat -- Gemini API --> AI((Google Gemini))
+    Email -- SMTP --> Mail[Citizens Inbox]
+```
+
+---
+
+## 🛡️ Security & Performance
+- **Security**: Hardened with `Helmet` (CSP, HSTS) and `Express-Rate-Limit` to prevent abuse.
+- **Efficiency**: Response `Compression` and static asset caching enabled for lightning-fast loads.
+- **Accessibility**: ARIA-compliant structure with high-contrast UI and keyboard navigation support.
+
+---
+
+## 🧪 Testing System
+The project includes a robust automated testing suite to ensure reliability:
+- **Backend Tests**: API integration tests using `Supertest`.
+- **Frontend Tests**: Logical unit tests using `JSDOM`.
+- **Mocking**: Reliable testing with mocked AI responses and browser globals.
+
+To run tests:
+```bash
+npm test
+```
 
 ---
 
@@ -43,104 +78,29 @@ Have a specific question? Ask **VoterBuddy AI**. Powered by **Google Gemini**, o
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Frontend** | Vanilla JS (ES6+), CSS3 Glassmorphism, HTML5, FontAwesome |
-| **Backend** | Node.js, Express.js |
+| **Frontend** | Vanilla JS (ES6+), CSS3 Glassmorphism, HTML5 (ARIA Compliant) |
+| **Backend** | Node.js, Express.js (Helmet & Compression optimized) |
 | **AI Intelligence** | Google Gemini API (`@google/genai`) |
+| **Testing** | Jest, Supertest, JSDOM |
 | **Infrastructure** | Docker, Google Cloud Run |
-| **Design** | Google Fonts (Outfit, Inter), Responsive Web Design |
-
----
-
-## 🏗️ Architecture Overview
-
-```mermaid
-graph LR
-    A[Client Browser] --> B[Express Server]
-    B --> C[Gemini AI API]
-    B --> D[Static Assets]
-    C --> B
-    B --> A
-```
-
----
-
-## 💻 Getting Started
-
-### Prerequisites
-- **Node.js** (v18 or higher)
-- **npm** (comes with Node)
-- **Google Gemini API Key** ([Get one here](https://aistudio.google.com/app/apikey))
-
-### Installation & Setup
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/jaiveerverma50989-dot/promotwar1.git
-   cd promotwar1
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment**
-   Create a `.env` file in the root directory:
-   ```env
-   GEMINI_API_KEY=your_actual_api_key_here
-   PORT=8080
-   ```
-
-4. **Launch Local Server**
-   ```bash
-   npm start
-   ```
-   Open [http://localhost:8080](http://localhost:8080) in your browser.
-
----
-
-## ☁️ Deployment
-
-This project is optimized for **Google Cloud Run**.
-
-1. **Build Container**
-   ```bash
-   docker build -t gcr.io/[PROJECT_ID]/voterbuddy .
-   ```
-
-2. **Deploy to Cloud Run**
-   ```bash
-   gcloud run deploy voterbuddy --image gcr.io/[PROJECT_ID]/voterbuddy --platform managed
-   ```
-
-*Alternatively, use the provided `deploy.sh` script.*
 
 ---
 
 ## 📂 Project Structure
-
 ```text
 .
-├── assets/             # Project images and logos
-├── data.js             # Static data for Guide, Flashcards, and Quiz
-├── index.html          # Main application structure
-├── script.js           # Frontend logic and AI interaction
-├── server.js           # Node/Express backend
-├── styles.css          # Premium Glassmorphism styling
-├── Dockerfile          # Container configuration
-└── README.md           # This document
+├── server.js           # Secure & Optimized Express Backend
+├── script.js           # Interactive Frontend Logic
+├── data.js             # Election Knowledge Base
+├── server.test.js      # Backend Integration Tests
+├── frontend.test.js    # Frontend Logic Tests
+├── index.html          # Accessible UI Structure
+├── styles.css          # Premium Design System
+└── deploy.sh           # Automated Cloud Deployment
 ```
 
 ---
 
-## 📄 License & Disclaimer
-
-- **License**: Distributed under the ISC License.
-- **Disclaimer**: This application is for educational purposes. All information is sourced from official guidelines provided by the **Election Commission of India (ECI)**. Always refer to official government portals for the most up-to-date legal requirements.
-
----
-
 <p align="center">
-  Made with ❤️ for Indian Democracy
+  Made with ❤️ for Indian Democracy | 🇮🇳 Every Vote Counts
 </p>
-

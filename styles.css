@@ -638,16 +638,17 @@ body {
 }
 
 .contact-action-card {
-  display: flex;
-  align-items: center;
+  display: flex !important;
+  align-items: center !important;
   gap: 1.25rem;
   padding: 1.25rem 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  text-decoration: none;
-  color: var(--text-main);
+  text-decoration: none !important;
+  color: var(--white) !important;
   transition: var(--transition);
   background-color: rgba(0,0,0,0.15);
+  margin-bottom: 0.5rem;
 }
 
 .contact-action-card:hover {
@@ -662,27 +663,28 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 1.3rem;
   flex-shrink: 0;
 }
 
-.call-card  .action-icon { background: rgba(34,197,94,0.15);  color: #22c55e; }
-.sms-card   .action-icon { background: rgba(255,153,51,0.15); color: var(--saffron); }
-.email-quick-card .action-icon { background: rgba(96,165,250,0.15); color: #60a5fa; }
+.call-card  .action-icon { background: rgba(34,197,94,0.15);  color: #22c55e !important; }
+.sms-card   .action-icon { background: rgba(255,153,51,0.15); color: var(--saffron) !important; }
+.email-quick-card .action-icon { background: rgba(96,165,250,0.15); color: #60a5fa !important; }
 
 .action-info {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  overflow: hidden;
 }
 
-.action-title  { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 600; }
+.action-title  { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 600; color: var(--white); }
 .action-detail { color: var(--text-muted); font-size: 0.9rem; }
-.action-arrow  { color: var(--text-muted); transition: var(--transition); }
+.action-arrow  { color: var(--text-muted); transition: var(--transition); font-size: 1rem; }
 .contact-action-card:hover .action-arrow { color: var(--white); transform: translateX(4px); }
 
 /* Contact Form */
@@ -830,6 +832,31 @@ body {
   font-size: 0.7rem;
   color: var(--text-muted);
   text-align: center;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  background: #22c55e;
+  color: #000;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+}
   margin-top: 4px;
   text-transform: uppercase;
   letter-spacing: 0.05em;

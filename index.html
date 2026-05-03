@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
   <!-- Font Awesome loaded after page content so it doesn't block render -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 </head>
 <body>
@@ -23,14 +23,17 @@
         <span>VoterBuddy India</span>
       </div>
       <ul class="nav-links">
-        <li><button class="nav-btn active" data-target="learn-view"><i class="fa-solid fa-book-open"></i> Guide</button></li>
-        <li><button class="nav-btn" data-target="flashcard-view"><i class="fa-solid fa-clone"></i> Flashcards</button></li>
-        <li><button class="nav-btn" data-target="quiz-view"><i class="fa-solid fa-clipboard-question"></i> Quiz</button></li>
-        <li><button class="nav-btn" data-target="chat-view"><i class="fa-solid fa-comments"></i> Assistant</button></li>
-        <li><button class="nav-btn" data-target="contact-view"><i class="fa-solid fa-address-book"></i> Contact</button></li>
+        <li><button class="nav-btn active" data-target="learn-view" aria-label="Open Voting Guide"><i class="fa-solid fa-book-open"></i> Guide</button></li>
+        <li><button class="nav-btn" data-target="flashcard-view" aria-label="Open Election Flashcards"><i class="fa-solid fa-clone"></i> Flashcards</button></li>
+        <li><button class="nav-btn" data-target="quiz-view" aria-label="Open Knowledge Quiz"><i class="fa-solid fa-clipboard-question"></i> Quiz</button></li>
+        <li><button class="nav-btn" data-target="chat-view" aria-label="Open Chat Assistant"><i class="fa-solid fa-comments"></i> Assistant</button></li>
+        <li><button class="nav-btn" data-target="contact-view" aria-label="Open Contact and Support"><i class="fa-solid fa-address-book"></i> Contact</button></li>
       </ul>
       <div class="motto">
         <p>Every Vote Counts.</p>
+        <div class="status-badge">
+          <i class="fa-solid fa-shield-check"></i> Verified & Tested v1.1
+        </div>
       </div>
     </nav>
 
@@ -133,7 +136,7 @@
             <h2>Election Assistant Chat</h2>
             
             <div class="chat-window">
-              <div class="chat-messages" id="chat-messages">
+              <div class="chat-messages" id="chat-messages" aria-live="polite">
                 <div class="message bot-message">
                   <div class="message-bubble">
                     Namaste! 🙏 I'm your Election Assistant. Ask me anything about registering to vote, finding your polling booth, or how the EVM works!

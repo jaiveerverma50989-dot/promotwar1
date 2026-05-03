@@ -7,6 +7,8 @@ const { GoogleGenAI } = require('@google/genai');
 const rateLimit  = require('express-rate-limit');
 const nodemailer = require('nodemailer');
 const cron       = require('node-cron');
+const helmet     = require('helmet');
+const compression = require('compression');
 
 dotenv.config();
 
@@ -14,6 +16,17 @@ const app  = express();
 const PORT = process.env.PORT || 8080;
 
 // ── Security ────────────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+    },
+  },
+}));
+app.use(compression());
 app.disable('x-powered-by');
 
 // ── Static files ─────────────────────────────────────────────
