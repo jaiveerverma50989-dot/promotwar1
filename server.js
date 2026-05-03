@@ -246,10 +246,14 @@ app.get('/api/subscribers/count', (req, res) => {
 // ── Fallback ──────────────────────────────────────────────────
 app.use((req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
-  const subs = loadSubscribers();
-  console.log(`Loaded ${subs.length} existing subscriber(s).`);
-  if (!process.env.GEMINI_API_KEY)  console.warn('WARNING: GEMINI_API_KEY not set.');
-  if (!process.env.EMAIL_USER)      console.warn('WARNING: EMAIL_USER not set — emails will be logged only.');
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+    const subs = loadSubscribers();
+    console.log(`Loaded ${subs.length} existing subscriber(s).`);
+    if (!process.env.GEMINI_API_KEY)  console.warn('WARNING: GEMINI_API_KEY not set.');
+    if (!process.env.EMAIL_USER)      console.warn('WARNING: EMAIL_USER not set — emails will be logged only.');
+  });
+}
+
+module.exports = app;
