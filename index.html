@@ -27,6 +27,7 @@
         <li><button class="nav-btn" data-target="flashcard-view"><i class="fa-solid fa-clone"></i> Flashcards</button></li>
         <li><button class="nav-btn" data-target="quiz-view"><i class="fa-solid fa-clipboard-question"></i> Quiz</button></li>
         <li><button class="nav-btn" data-target="chat-view"><i class="fa-solid fa-comments"></i> Assistant</button></li>
+        <li><button class="nav-btn" data-target="contact-view"><i class="fa-solid fa-address-book"></i> Contact</button></li>
       </ul>
       <div class="motto">
         <p>Every Vote Counts.</p>
@@ -152,6 +153,120 @@
                 <button id="chat-send-btn" class="primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- Contact View -->
+        <section id="contact-view" class="view">
+          <div class="card-container">
+            <h2>Contact &amp; Support</h2>
+            <p class="subtitle">Reach out to the Election Commission of India or send us a message directly.</p>
+
+            <!-- Quick Actions -->
+            <div class="contact-quick-actions">
+              <a href="tel:1950" class="contact-action-card call-card" id="call-eci-btn">
+                <div class="action-icon"><i class="fa-solid fa-phone"></i></div>
+                <div class="action-info">
+                  <span class="action-title">Call ECI Helpline</span>
+                  <span class="action-detail">1950 &mdash; Toll Free</span>
+                </div>
+                <i class="fa-solid fa-arrow-right action-arrow"></i>
+              </a>
+
+              <a href="sms:1950" class="contact-action-card sms-card" id="sms-eci-btn">
+                <div class="action-icon"><i class="fa-solid fa-message"></i></div>
+                <div class="action-info">
+                  <span class="action-title">Send SMS</span>
+                  <span class="action-detail">Text 1950 for voter info</span>
+                </div>
+                <i class="fa-solid fa-arrow-right action-arrow"></i>
+              </a>
+
+              <a href="mailto:complaints@eci.gov.in" class="contact-action-card email-quick-card" id="email-quick-btn">
+                <div class="action-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div class="action-info">
+                  <span class="action-title">Email ECI</span>
+                  <span class="action-detail">complaints@eci.gov.in</span>
+                </div>
+                <i class="fa-solid fa-arrow-right action-arrow"></i>
+              </a>
+            </div>
+
+            <!-- Email Contact Form -->
+            <div class="contact-form-section">
+              <h3 class="form-heading"><i class="fa-solid fa-paper-plane"></i> Send Us a Message</h3>
+              <form id="contact-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-name">Full Name</label>
+                    <input type="text" id="contact-name" placeholder="Enter your name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-email">Email Address</label>
+                    <input type="email" id="contact-email" placeholder="your@email.com" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-phone">Phone Number</label>
+                    <input type="tel" id="contact-phone" placeholder="+91 XXXXX XXXXX">
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-subject">Subject</label>
+                    <select id="contact-subject">
+                      <option value="voter-registration">Voter Registration Help</option>
+                      <option value="polling-booth">Polling Booth Query</option>
+                      <option value="evm-complaint">EVM Complaint</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="contact-message">Message</label>
+                  <textarea id="contact-message" rows="5" placeholder="Describe your issue or question..." required></textarea>
+                </div>
+                <div id="contact-form-status" class="form-status hidden"></div>
+                <button type="submit" class="primary-btn submit-btn" id="contact-submit-btn">
+                  <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+              </form>
+            </div>
+
+            <!-- Auto Reminder Subscription -->
+            <div class="subscribe-section">
+              <div class="subscribe-header">
+                <div>
+                  <h3><i class="fa-solid fa-bell"></i> Automatic Election Reminders</h3>
+                  <p>Subscribe and we'll <strong>automatically remind all citizens</strong> every week with election tips, deadlines, and civic updates — straight to your inbox.</p>
+                </div>
+                <div class="subscriber-badge">
+                  <span id="subscriber-count">0</span>
+                  <span class="badge-label">Citizens Subscribed</span>
+                </div>
+              </div>
+              <form id="subscribe-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="sub-name">Your Name</label>
+                    <input type="text" id="sub-name" placeholder="Enter your name">
+                  </div>
+                  <div class="form-group">
+                    <label for="sub-email">Email Address <span class="required-star">*</span></label>
+                    <input type="email" id="sub-email" placeholder="your@email.com" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="sub-phone">Phone (optional)</label>
+                    <input type="tel" id="sub-phone" placeholder="+91 XXXXX XXXXX">
+                  </div>
+                </div>
+                <div id="subscribe-status" class="form-status hidden"></div>
+                <button type="submit" class="subscribe-btn" id="subscribe-btn">
+                  <i class="fa-solid fa-bell"></i> Subscribe for Reminders
+                </button>
+              </form>
+              <p class="subscribe-note"><i class="fa-solid fa-shield-halved"></i> Reminders sent every Monday at 9 AM IST. Unsubscribe anytime. No spam.</p>
+            </div>
+
           </div>
         </section>
 

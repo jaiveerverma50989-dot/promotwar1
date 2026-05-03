@@ -36,16 +36,26 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.scoreMessage    = document.getElementById('score-message');
 
   // Chat
-  DOM.chatMessages = document.getElementById('chat-messages');
-  DOM.chatInput    = document.getElementById('chat-input');
-  DOM.chatSendBtn  = document.getElementById('chat-send-btn');
+  DOM.chatMessages    = document.getElementById('chat-messages');
+  DOM.chatInput       = document.getElementById('chat-input');
+  DOM.chatSendBtn     = document.getElementById('chat-send-btn');
   DOM.suggestionChips = document.querySelectorAll('.suggestion-chip');
+
+  // Contact
+  DOM.contactForm       = document.getElementById('contact-form');
+  DOM.contactSubmitBtn  = document.getElementById('contact-submit-btn');
+  DOM.contactStatus     = document.getElementById('contact-form-status');
+  DOM.subscribeForm     = document.getElementById('subscribe-form');
+  DOM.subscribeBtn      = document.getElementById('subscribe-btn');
+  DOM.subscribeStatus   = document.getElementById('subscribe-status');
+  DOM.subscriberCount   = document.getElementById('subscriber-count');
 
   initNavigation();
   initProcessTimeline();
   initFlashcards();
   initQuiz();
   initChat();
+  initContact();
 });
 
 // ============================================================
@@ -309,25 +319,118 @@ async function getChatResponse(inputText) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: inputText }),
     });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`Server responded with ${response.status}`);
     const data = await response.json();
     return data.response;
   } catch (error) {
     console.warn('Chat API unavailable, falling back to local KB:', error.message);
-
-    // Try local knowledge base
     const lowerText = inputText.toLowerCase();
     for (const item of indianElectionData.chatKnowledgeBase) {
-      if (item.keywords.some(kw => lowerText.includes(kw))) {
-        return item.response; // return here — no need to throw
-      }
+      if (item.keywords.some(kw => lowerText.includes(kw))) return item.response;
     }
-
-    // Nothing matched in local KB either
     throw new Error('No match in local knowledge base');
   }
+}
+
+// ============================================================
+//  Contact & Reminder Subscription
+// ============================================================
+function initContact() {
+  // Load live subscriber count
+  fetch('/api/subscribers/count')
+    .then(r => r.json())
+    .then(data => {
+      if (DOM.subscriberCount) DOM.subscriberCount.textContent = data.count.toLocaleString();
+    })
+    .catch(() => {});
+
+  // Contact form
+  if (DOM.contactForm) {
+    DOM.contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name    = document.getElementById('contact-name').value.trim();
+      const email   = document.getElementById('contact-email').value.trim();
+      const phone   = document.getElementById('contact-phone').value.trim();
+      const subject = document.getElementById('contact-subject').value;
+      const message = document.getElementById('contact-message').value.trim();
+
+      if (!name || !email || !message) {
+        showFormStatus(DOM.contactStatus, 'Please fill in all required fields.', 'error');
+        return;
+      }
+
+      DOM.contactSubmitBtn.disabled = true;
+      DOM.contactSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+      try {
+        const res  = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, subject, message }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showFormStatus(DOM.contactStatus, data.message, 'success');
+          DOM.contactForm.reset();
+        } else {
+          showFormStatus(DOM.contactStatus, data.error || 'Something went wrong.', 'error');
+        }
+      } catch {
+        showFormStatus(DOM.contactStatus, 'Could not connect to server. Please try again.', 'error');
+      } finally {
+        DOM.contactSubmitBtn.disabled = false;
+        DOM.contactSubmitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+      }
+    });
+  }
+
+  // Subscribe form
+  if (DOM.subscribeForm) {
+    DOM.subscribeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name  = document.getElementById('sub-name').value.trim();
+      const email = document.getElementById('sub-email').value.trim();
+      const phone = document.getElementById('sub-phone').value.trim();
+
+      if (!email) {
+        showFormStatus(DOM.subscribeStatus, 'Please enter your email address.', 'error');
+        return;
+      }
+
+      DOM.subscribeBtn.disabled = true;
+      DOM.subscribeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Subscribing...';
+
+      try {
+        const res  = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showFormStatus(DOM.subscribeStatus, data.message, 'success');
+          DOM.subscribeForm.reset();
+          // Update count
+          fetch('/api/subscribers/count').then(r=>r.json()).then(d=>{
+            if (DOM.subscriberCount) DOM.subscriberCount.textContent = d.count.toLocaleString();
+          }).catch(()=>{});
+        } else {
+          showFormStatus(DOM.subscribeStatus, data.error || 'Something went wrong.', 'error');
+        }
+      } catch {
+        showFormStatus(DOM.subscribeStatus, 'Could not connect. Please try again.', 'error');
+      } finally {
+        DOM.subscribeBtn.disabled = false;
+        DOM.subscribeBtn.innerHTML = '<i class="fa-solid fa-bell"></i> Subscribe for Reminders';
+      }
+    });
+  }
+}
+
+function showFormStatus(el, msg, type) {
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `form-status ${type}`;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 6000);
 }
