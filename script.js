@@ -1,4 +1,46 @@
+// ============================================================
+//  Cached DOM References  (queried once, never inside loops)
+// ============================================================
+const DOM = {};
+
 document.addEventListener('DOMContentLoaded', () => {
+  // Navigation
+  DOM.navBtns = document.querySelectorAll('.nav-btn');
+  DOM.views   = document.querySelectorAll('.view');
+
+  // Process
+  DOM.processContainer = document.getElementById('process-container');
+
+  // Flashcards
+  DOM.flashcard  = document.getElementById('current-flashcard');
+  DOM.fcTerm     = document.getElementById('fc-term');
+  DOM.fcDef      = document.getElementById('fc-def');
+  DOM.fcCounter  = document.getElementById('fc-counter');
+  DOM.fcPrev     = document.getElementById('fc-prev');
+  DOM.fcNext     = document.getElementById('fc-next');
+
+  // Quiz
+  DOM.quizIntro       = document.getElementById('quiz-intro');
+  DOM.quizActive      = document.getElementById('quiz-active');
+  DOM.quizResults     = document.getElementById('quiz-results');
+  DOM.quizProgressTxt = document.getElementById('quiz-progress-text');
+  DOM.quizProgressBar = document.getElementById('quiz-progress-fill');
+  DOM.quizQuestion    = document.getElementById('quiz-question-text');
+  DOM.quizOptions     = document.getElementById('quiz-options');
+  DOM.quizFeedback    = document.getElementById('quiz-feedback');
+  DOM.feedbackText    = document.getElementById('feedback-text');
+  DOM.explanationText = document.getElementById('explanation-text');
+  DOM.nextQBtn        = document.getElementById('next-q-btn');
+  DOM.finalScore      = document.getElementById('final-score');
+  DOM.totalQuestions  = document.getElementById('total-questions');
+  DOM.scoreMessage    = document.getElementById('score-message');
+
+  // Chat
+  DOM.chatMessages = document.getElementById('chat-messages');
+  DOM.chatInput    = document.getElementById('chat-input');
+  DOM.chatSendBtn  = document.getElementById('chat-send-btn');
+  DOM.suggestionChips = document.querySelectorAll('.suggestion-chip');
+
   initNavigation();
   initProcessTimeline();
   initFlashcards();
@@ -6,28 +48,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initChat();
 });
 
-// --- Navigation Logic ---
+// ============================================================
+//  Navigation
+// ============================================================
 function initNavigation() {
-  const navBtns = document.querySelectorAll('.nav-btn');
-  const views = document.querySelectorAll('.view');
-
-  navBtns.forEach(btn => {
+  DOM.navBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Update buttons
-      navBtns.forEach(b => b.classList.remove('active'));
+      DOM.navBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Update views
       const targetId = btn.getAttribute('data-target');
-      views.forEach(v => v.classList.remove('active'));
+      DOM.views.forEach(v => v.classList.remove('active'));
       document.getElementById(targetId).classList.add('active');
     });
   });
 }
 
-// --- Process Logic ---
+// ============================================================
+//  Process Timeline  (batch DOM insertion via DocumentFragment)
+// ============================================================
 function initProcessTimeline() {
-  const container = document.getElementById('process-container');
+  const fragment = document.createDocumentFragment();
+
   indianElectionData.process.forEach(step => {
     const el = document.createElement('div');
     el.className = 'process-step';
@@ -38,75 +80,68 @@ function initProcessTimeline() {
         <p>${step.description}</p>
       </div>
     `;
-    container.appendChild(el);
+    fragment.appendChild(el);
   });
+
+  DOM.processContainer.appendChild(fragment); // single reflow
 }
 
-// --- Flashcard Logic ---
+// ============================================================
+//  Flashcards
+// ============================================================
 let currentFlashcardIndex = 0;
 
 function initFlashcards() {
-  const flashcardEl = document.getElementById('current-flashcard');
-  const prevBtn = document.getElementById('fc-prev');
-  const nextBtn = document.getElementById('fc-next');
-
-  // Flip interaction
-  flashcardEl.addEventListener('click', () => {
-    flashcardEl.classList.toggle('is-flipped');
+  DOM.flashcard.addEventListener('click', () => {
+    DOM.flashcard.classList.toggle('is-flipped');
   });
 
-  // Controls
-  prevBtn.addEventListener('click', () => {
+  DOM.fcPrev.addEventListener('click', () => {
     if (currentFlashcardIndex > 0) {
       currentFlashcardIndex--;
       updateFlashcardUI();
     }
   });
 
-  nextBtn.addEventListener('click', () => {
+  DOM.fcNext.addEventListener('click', () => {
     if (currentFlashcardIndex < indianElectionData.flashcards.length - 1) {
       currentFlashcardIndex++;
       updateFlashcardUI();
     }
   });
 
-  updateFlashcardUI(); // Initial render
+  updateFlashcardUI();
 }
 
 function updateFlashcardUI() {
-  const flashcardEl = document.getElementById('current-flashcard');
-  const termEl = document.getElementById('fc-term');
-  const defEl = document.getElementById('fc-def');
-  const counterEl = document.getElementById('fc-counter');
-  const prevBtn = document.getElementById('fc-prev');
-  const nextBtn = document.getElementById('fc-next');
+  DOM.flashcard.classList.remove('is-flipped');
 
-  // Reset flip state if moving to next card
-  flashcardEl.classList.remove('is-flipped');
-
-  // Slight delay to allow flip animation to reset before changing text
+  // Wait for CSS flip-reset animation before updating text
   setTimeout(() => {
     const cardData = indianElectionData.flashcards[currentFlashcardIndex];
-    termEl.textContent = cardData.term;
-    defEl.textContent = cardData.definition;
-    counterEl.textContent = `${currentFlashcardIndex + 1} / ${indianElectionData.flashcards.length}`;
+    DOM.fcTerm.textContent    = cardData.term;
+    DOM.fcDef.textContent     = cardData.definition;
+    DOM.fcCounter.textContent = `${currentFlashcardIndex + 1} / ${indianElectionData.flashcards.length}`;
 
-    prevBtn.disabled = currentFlashcardIndex === 0;
-    nextBtn.disabled = currentFlashcardIndex === indianElectionData.flashcards.length - 1;
-    
-    // Visual styling for disabled buttons
-    prevBtn.style.opacity = prevBtn.disabled ? "0.5" : "1";
-    nextBtn.style.opacity = nextBtn.disabled ? "0.5" : "1";
+    const atStart = currentFlashcardIndex === 0;
+    const atEnd   = currentFlashcardIndex === indianElectionData.flashcards.length - 1;
+
+    DOM.fcPrev.disabled      = atStart;
+    DOM.fcNext.disabled      = atEnd;
+    DOM.fcPrev.style.opacity = atStart ? '0.5' : '1';
+    DOM.fcNext.style.opacity = atEnd   ? '0.5' : '1';
   }, 150);
 }
 
-// --- Quiz Logic ---
+// ============================================================
+//  Quiz
+// ============================================================
 let currentQuestionIndex = 0;
 let score = 0;
 
 function initQuiz() {
   document.getElementById('start-quiz-btn').addEventListener('click', startQuiz);
-  document.getElementById('next-q-btn').addEventListener('click', nextQuestion);
+  DOM.nextQBtn.addEventListener('click', nextQuestion);
   document.getElementById('restart-quiz-btn').addEventListener('click', () => {
     currentQuestionIndex = 0;
     score = 0;
@@ -115,82 +150,60 @@ function initQuiz() {
 }
 
 function startQuiz() {
-  document.getElementById('quiz-intro').classList.remove('active');
-  document.getElementById('quiz-results').classList.remove('active');
-  document.getElementById('quiz-active').classList.add('active');
+  DOM.quizIntro.classList.remove('active');
+  DOM.quizResults.classList.remove('active');
+  DOM.quizActive.classList.add('active');
   loadQuestion();
 }
 
 function loadQuestion() {
   const qData = indianElectionData.quiz[currentQuestionIndex];
-  
-  // Update progress
-  document.getElementById('quiz-progress-text').textContent = `Question ${currentQuestionIndex + 1} of ${indianElectionData.quiz.length}`;
-  const progressPercent = ((currentQuestionIndex) / indianElectionData.quiz.length) * 100;
-  document.getElementById('quiz-progress-fill').style.width = `${progressPercent}%`;
+  const total  = indianElectionData.quiz.length;
 
-  // Render text
-  document.getElementById('quiz-question-text').textContent = qData.question;
-  
-  // Render options
-  const optionsContainer = document.getElementById('quiz-options');
-  optionsContainer.innerHTML = '';
-  
+  DOM.quizProgressTxt.textContent = `Question ${currentQuestionIndex + 1} of ${total}`;
+  DOM.quizProgressBar.style.width = `${(currentQuestionIndex / total) * 100}%`;
+  DOM.quizQuestion.textContent    = qData.question;
+
+  // Batch option rendering via DocumentFragment
+  const fragment = document.createDocumentFragment();
   qData.options.forEach((opt, index) => {
     const btn = document.createElement('button');
-    btn.className = 'option-btn';
+    btn.className   = 'option-btn';
     btn.textContent = opt;
     btn.addEventListener('click', () => selectAnswer(index, btn));
-    optionsContainer.appendChild(btn);
+    fragment.appendChild(btn);
   });
+  DOM.quizOptions.innerHTML = '';
+  DOM.quizOptions.appendChild(fragment);
 
-  // Hide feedback box
-  document.getElementById('quiz-feedback').classList.add('hidden');
+  DOM.quizFeedback.classList.add('hidden');
 }
 
 function selectAnswer(selectedIndex, selectedBtn) {
-  const qData = indianElectionData.quiz[currentQuestionIndex];
-  const optionsContainer = document.getElementById('quiz-options');
-  const allBtns = optionsContainer.querySelectorAll('.option-btn');
+  const qData   = indianElectionData.quiz[currentQuestionIndex];
+  const allBtns = DOM.quizOptions.querySelectorAll('.option-btn');
 
-  // Disable all buttons
-  allBtns.forEach(btn => btn.disabled = true);
+  allBtns.forEach(btn => (btn.disabled = true));
 
-  // Check correct
   const isCorrect = selectedIndex === qData.correctIndex;
-  
+
   if (isCorrect) {
     selectedBtn.classList.add('correct');
     score++;
   } else {
     selectedBtn.classList.add('incorrect');
-    // Highlight correct one
     allBtns[qData.correctIndex].classList.add('correct');
   }
 
-  // Show Feedback
-  const feedbackBox = document.getElementById('quiz-feedback');
-  const feedbackText = document.getElementById('feedback-text');
-  const explanationText = document.getElementById('explanation-text');
+  DOM.quizFeedback.classList.remove('hidden');
+  DOM.feedbackText.textContent    = isCorrect ? 'Correct!' : 'Incorrect.';
+  DOM.feedbackText.className      = isCorrect ? 'correct-text' : 'incorrect-text';
+  DOM.explanationText.textContent = qData.explanation;
 
-  feedbackBox.classList.remove('hidden');
-  
-  if (isCorrect) {
-    feedbackText.textContent = "Correct!";
-    feedbackText.className = "correct-text";
-  } else {
-    feedbackText.textContent = "Incorrect.";
-    feedbackText.className = "incorrect-text";
-  }
-  
-  explanationText.textContent = qData.explanation;
-  
-  // Change next button text if it's the last question
-  if (currentQuestionIndex === indianElectionData.quiz.length - 1) {
-    document.getElementById('next-q-btn').textContent = "See Results";
-  } else {
-    document.getElementById('next-q-btn').textContent = "Next Question";
-  }
+  DOM.nextQBtn.textContent =
+    currentQuestionIndex === indianElectionData.quiz.length - 1
+      ? 'See Results'
+      : 'Next Question';
 }
 
 function nextQuestion() {
@@ -203,121 +216,118 @@ function nextQuestion() {
 }
 
 function showResults() {
-  document.getElementById('quiz-active').classList.remove('active');
-  document.getElementById('quiz-results').classList.add('active');
-  
-  document.getElementById('final-score').textContent = score;
-  document.getElementById('total-questions').textContent = indianElectionData.quiz.length;
-  
-  const progressPercent = 100;
-  document.getElementById('quiz-progress-fill').style.width = `${progressPercent}%`;
+  DOM.quizActive.classList.remove('active');
+  DOM.quizResults.classList.add('active');
 
-  const msgEl = document.getElementById('score-message');
-  if (score === indianElectionData.quiz.length) {
-    msgEl.textContent = "Outstanding! You are a democratic champion!";
-  } else if (score >= indianElectionData.quiz.length / 2) {
-    msgEl.textContent = "Good job! You have a solid grasp of the system.";
+  const total = indianElectionData.quiz.length;
+  DOM.finalScore.textContent    = score;
+  DOM.totalQuestions.textContent = total;
+  DOM.quizProgressBar.style.width = '100%';
+
+  if (score === total) {
+    DOM.scoreMessage.textContent = 'Outstanding! You are a democratic champion!';
+  } else if (score >= total / 2) {
+    DOM.scoreMessage.textContent = 'Good job! You have a solid grasp of the system.';
   } else {
-    msgEl.textContent = "Keep learning! Democracy relies on informed citizens.";
+    DOM.scoreMessage.textContent = 'Keep learning! Democracy relies on informed citizens.';
   }
 }
 
-// --- Chat Logic ---
-function initChat() {
-  const sendBtn = document.getElementById('chat-send-btn');
-  const chatInput = document.getElementById('chat-input');
-  const suggestionChips = document.querySelectorAll('.suggestion-chip');
+// ============================================================
+//  Chat
+// ============================================================
+let isSending = false; // guard against double-send
 
-  sendBtn.addEventListener('click', handleSendMessage);
-  chatInput.addEventListener('keypress', (e) => {
+function initChat() {
+  DOM.chatSendBtn.addEventListener('click', handleSendMessage);
+  DOM.chatInput.addEventListener('keypress', e => {
     if (e.key === 'Enter') handleSendMessage();
   });
 
-  suggestionChips.forEach(chip => {
+  DOM.suggestionChips.forEach(chip => {
     chip.addEventListener('click', () => {
-      chatInput.value = chip.textContent;
+      DOM.chatInput.value = chip.textContent;
       handleSendMessage();
     });
   });
 }
 
 async function handleSendMessage() {
-  const inputEl = document.getElementById('chat-input');
-  const text = inputEl.value.trim();
+  if (isSending) return; // prevent double-send
+
+  const text = DOM.chatInput.value.trim();
   if (!text) return;
 
-  // Add user message
-  appendMessage(text, 'user-message');
-  inputEl.value = '';
+  isSending = true;
+  DOM.chatSendBtn.disabled = true;
 
-  // Add typing indicator
-  const messagesContainer = document.getElementById('chat-messages');
+  appendMessage(text, 'user-message');
+  DOM.chatInput.value = '';
+
+  // Typing indicator
   const typingDiv = document.createElement('div');
   typingDiv.className = 'message bot-message';
-  typingDiv.id = 'typing-indicator';
+  typingDiv.id        = 'typing-indicator';
   typingDiv.innerHTML = `<div class="message-bubble"><em>Thinking...</em></div>`;
-  messagesContainer.appendChild(typingDiv);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  DOM.chatMessages.appendChild(typingDiv);
+  DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
 
   try {
     const response = await getChatResponse(text);
-    // Remove typing indicator
-    const indicator = document.getElementById('typing-indicator');
-    if (indicator) indicator.remove();
-    
+    document.getElementById('typing-indicator')?.remove();
     appendMessage(response, 'bot-message');
-  } catch (err) {
-    const indicator = document.getElementById('typing-indicator');
-    if (indicator) indicator.remove();
-    appendMessage("Sorry, I am having trouble connecting to the backend server.", 'bot-message');
+  } catch {
+    document.getElementById('typing-indicator')?.remove();
+    appendMessage('Sorry, I am having trouble connecting to the backend server.', 'bot-message');
+  } finally {
+    isSending = false;
+    DOM.chatSendBtn.disabled = false;
+    DOM.chatInput.focus();
   }
 }
 
 function appendMessage(text, className) {
-  const messagesContainer = document.getElementById('chat-messages');
   const msgDiv = document.createElement('div');
   msgDiv.className = `message ${className}`;
-  
-  // Basic markdown formatting for bold and line breaks
+
   let formattedText = text;
-  if(className === 'bot-message') {
-    formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    formattedText = formattedText.replace(/\n/g, '<br>');
+  if (className === 'bot-message') {
+    formattedText = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
   }
 
   msgDiv.innerHTML = `<div class="message-bubble">${formattedText}</div>`;
-  messagesContainer.appendChild(msgDiv);
-  
-  // Auto scroll to bottom
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  DOM.chatMessages.appendChild(msgDiv);
+  DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
 }
 
 async function getChatResponse(inputText) {
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: inputText })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: inputText }),
     });
-    
+
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error(`Server responded with ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data.response;
   } catch (error) {
-    console.error("Chat API error:", error);
-    // Fallback to local data if server is down or returns error
+    console.warn('Chat API unavailable, falling back to local KB:', error.message);
+
+    // Try local knowledge base
     const lowerText = inputText.toLowerCase();
     for (const item of indianElectionData.chatKnowledgeBase) {
       if (item.keywords.some(kw => lowerText.includes(kw))) {
-        return item.response;
+        return item.response; // return here — no need to throw
       }
     }
-    throw error;
+
+    // Nothing matched in local KB either
+    throw new Error('No match in local knowledge base');
   }
 }
-

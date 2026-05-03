@@ -295,6 +295,7 @@ body {
   text-align: center;
   transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
   transform-style: preserve-3d;
+  will-change: transform; /* promotes to GPU composite layer for smooth flip */
 }
 
 .flashcard.is-flipped .flashcard-inner {

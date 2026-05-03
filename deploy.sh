@@ -6,5 +6,5 @@ gcloud run deploy election-assistant \
   --region us-central1 \
   --project promotwar1 \
   --allow-unauthenticated \
-  --set-env-vars="GEMINI_API_KEY=${GEMINI_API_KEY}"
+  --set-env-vars="GEMINI_API_KEY=${GEMINI_API_KEY},NODE_ENV=production"
 echo "Deployment complete!"
