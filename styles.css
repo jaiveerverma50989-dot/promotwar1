@@ -637,55 +637,77 @@ body {
   margin-bottom: 2.5rem;
 }
 
-.contact-action-card {
+/* Force premium card look for contact links */
+.contact-quick-actions a.contact-action-card {
   display: flex !important;
   align-items: center !important;
-  gap: 1.25rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+  gap: 1.25rem !important;
+  padding: 1.5rem !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   text-decoration: none !important;
   color: var(--white) !important;
-  transition: var(--transition);
-  background-color: rgba(0,0,0,0.15);
-  margin-bottom: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  margin-bottom: 1rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 }
 
-.contact-action-card:hover {
-  transform: translateX(6px);
+.contact-quick-actions a.contact-action-card:hover {
+  transform: translateX(8px) translateY(-2px) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-.call-card:hover  { border-color: #22c55e; background: rgba(34,197,94,0.08); }
-.sms-card:hover   { border-color: var(--saffron); background: rgba(255,153,51,0.08); }
-.email-quick-card:hover { border-color: #60a5fa; background: rgba(96,165,250,0.08); }
+.contact-quick-actions a.contact-action-card.call-card:hover { border-color: #22c55e !important; }
+.contact-quick-actions a.contact-action-card.sms-card:hover { border-color: var(--saffron) !important; }
+.contact-quick-actions a.contact-action-card.email-quick-card:hover { border-color: #60a5fa !important; }
 
-.action-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.contact-action-card .action-icon {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 12px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 1.3rem;
-  flex-shrink: 0;
+  font-size: 1.4rem !important;
+  flex-shrink: 0 !important;
 }
 
-.call-card  .action-icon { background: rgba(34,197,94,0.15);  color: #22c55e !important; }
-.sms-card   .action-icon { background: rgba(255,153,51,0.15); color: var(--saffron) !important; }
-.email-quick-card .action-icon { background: rgba(96,165,250,0.15); color: #60a5fa !important; }
+.call-card .action-icon { background: rgba(34, 197, 94, 0.15) !important; color: #22c55e !important; }
+.sms-card .action-icon { background: rgba(255, 153, 51, 0.15) !important; color: var(--saffron) !important; }
+.email-quick-card .action-icon { background: rgba(96, 165, 250, 0.15) !important; color: #60a5fa !important; }
 
 .action-info {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  overflow: hidden;
+  flex-grow: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
 }
 
-.action-title  { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 600; color: var(--white); }
-.action-detail { color: var(--text-muted); font-size: 0.9rem; }
-.action-arrow  { color: var(--text-muted); transition: var(--transition); font-size: 1rem; }
-.contact-action-card:hover .action-arrow { color: var(--white); transform: translateX(4px); }
+.action-title {
+  font-family: var(--font-heading) !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: var(--white) !important;
+}
+
+.action-detail {
+  color: var(--text-muted) !important;
+  font-size: 0.95rem !important;
+}
+
+.action-arrow {
+  color: rgba(255, 255, 255, 0.2) !important;
+  font-size: 1.2rem !important;
+  transition: transform 0.3s ease !important;
+}
+
+.contact-action-card:hover .action-arrow {
+  color: var(--white) !important;
+  transform: translateX(5px) !important;
+}
 
 /* Contact Form */
 .contact-form-section {
@@ -856,11 +878,6 @@ body {
   0% { transform: scale(1); box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
   50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
   100% { transform: scale(1); box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
-}
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 
 .subscribe-btn {
   background: linear-gradient(135deg, var(--saffron), #e68a2e);
